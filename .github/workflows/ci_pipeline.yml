@@ -1,0 +1,31 @@
+name: AssocCoop Gestor - CI Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    name: Build & Automated Tests (Domain / Security)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do Repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Ambiente de Execução
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validar Estrutura de Camadas e Arquivos
+        run: |
+          test -d lib/presentation
+          test -d lib/domain
+          test -d lib/persistence
+          echo "Arquitetura em camadas validada com sucesso."
+
+      - name: Executar Testes Unitários e de Integração
+        run: python run_tests.py
